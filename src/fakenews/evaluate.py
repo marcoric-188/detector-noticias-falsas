@@ -192,7 +192,7 @@ def figura_subgrupos(tabla: pd.DataFrame, nombre_archivo: str, titulo: str) -> N
     ax.hlines(range(len(t)), 0, t["f1_macro"], color="#d9d8d3", lw=2)
     ax.plot(t["f1_macro"], range(len(t)), "o", ms=7, color=AZUL)
     for i, v in enumerate(t["f1_macro"]):
-        ax.text(v + 0.01, i, f"{v:.2f}", va="center", color=TEXTO_2, fontsize=9)
+        ax.text(v + 0.025, i, f"{v:.2f}", va="center", color=TEXTO_2, fontsize=9)
     ax.set_yticks(range(len(t)), etiquetas)
     ax.set_xlim(0, 1.08)
     ax.set_xlabel("F1-macro (0 a 1)")

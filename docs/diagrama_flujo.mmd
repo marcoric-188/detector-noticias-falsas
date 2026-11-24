@@ -1,0 +1,31 @@
+flowchart TD
+    A([INICIO]) --> B[Leer y delimitar el enunciado<br/>ficha 22: clasificar estilo, no verificar hechos]
+    B --> C[Investigar antecedentes<br/>FakeDeS 2021, UdeA 2021, Iceland 2023]
+    C --> D[Definir usuario, objetivos y alcance<br/>verificador que prioriza su cola]
+    D --> E[Clasificar la tarea: clasificación binaria de texto<br/>líneas base: clase mayoritaria y reglas IFLA]
+    E --> F[Buscar datos y verificar acceso y licencia]
+    F --> G{¿Fuente legítima, accesible<br/>y pertinente?}
+    G -- "NO: ISOT y LIAR sin copia oficial, en inglés" --> F
+    G -- "SÍ: Spanish Fake News Corpus v1 + v2, CC-BY-4.0" --> H[Descargar con SHA-256 y explorar EDA]
+    H --> I{¿Calidad y cantidad<br/>suficientes?}
+    I -- "Problemas: formato distinto v1/v2, duplicados,<br/>fuente que delata la clase" --> J[Normalizar cifras y URLs, quitar titular repetido,<br/>eliminar casi duplicados de las pruebas]
+    J --> I
+    I -- SÍ --> K[Definir particiones: entrenamiento, prueba DD v1, prueba FD v2<br/>CV estratificada + CV agrupada por fuente]
+    K --> L{¿La evaluación evita fuga?<br/>TF-IDF dentro de Pipeline, prueba bloqueada}
+    L -- NO --> K
+    L -- SÍ --> M[Fijar métricas, criterios de éxito y regla de selección<br/>commit ANTES de los experimentos]
+    M --> N[Ejecutar líneas base E-00a, E-00b, E-01]
+    N --> O[Experimentos E-02 a E-09<br/>un cambio a la vez, bitácora y registro]
+    O --> P[Elegir modelo con la regla a priori<br/>mejor F1-macro en CV agrupada]
+    P --> Q[Evaluación final ÚNICA en DD y FD<br/>bootstrap, subgrupos, abstención]
+    Q --> R{¿Supera la línea base y<br/>cumple los criterios?}
+    R -- "NO: se reporta como no cumplido" --> S[Analizar errores por tipo, tema, país y fuente<br/>¿falla en datos, preparación, método o métrica?]
+    S --> T[Registrar lecciones y trabajo futuro<br/>no se reajusta con la prueba]
+    R -- SÍ --> U
+    T --> U[Revisar sesgos, privacidad, seguridad y límites<br/>matriz de riesgos]
+    U --> V{¿Riesgos aceptables con<br/>mitigaciones?}
+    V -- "NO" --> W[Restringir el uso: solo priorización,<br/>revisión humana obligatoria, abstención]
+    W --> V
+    V -- SÍ --> X[App Streamlit + CLI con validación de entradas,<br/>explicación y plan de seguimiento]
+    X --> Y[Documentar, citar fuentes y presentar evidencias]
+    Y --> Z([FIN])

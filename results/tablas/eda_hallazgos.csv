@@ -1,0 +1,11 @@
+id,hallazgo,cuantificación,tratamiento
+H1,Balance de clases (entrenamiento),338 falsas / 338 verdaderas,F1-macro como métrica principal
+H2,Titulares vacíos en v2,72 de 572,Cadena vacía + subgrupo 'sin titular'
+H3,Cifras normalizadas solo en v1,*NUMBER* en 76.2 % (v1) vs 0.0 % (v2),Normalizar todo a NUM
+H4,Cuerpo repite el titular (v1),96.9 % en entrenamiento vs 0.9 % en v2,Quitar titular repetido
+H5,Titular en mayúsculas,15.4% falsas vs 1.5% verdaderas,Minúsculas por defecto; E-08
+H6,Longitud distinta por clase,mediana 270 vs 383 palabras,Análisis por tercil de longitud
+H7,Falsas concentradas en sitios satíricos,4 fuentes = 62% de las falsas,CV agrupada por fuente
+H8,Fuentes compartidas con prueba DD,43 de 71,Seleccionar con CV agrupada
+H9,Casi duplicados DD–entrenamiento,5 textos,Eliminados de DD
+H10,Casi duplicados FD–v1,4 textos,Eliminados de FD
