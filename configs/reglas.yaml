@@ -1,0 +1,149 @@
+# Base de conocimiento del sistema experto (reglas de verificación)
+# ---------------------------------------------------------------------------------------------
+# Las reglas traducen a señales textuales los pasos de la infografía "How to Spot Fake News" de la IFLA
+# (2017, CC-BY-4.0) y su edición COVID-19 (2020). Ver docs/base_conocimiento.md.
+#
+# IMPORTANTE: los pesos y el umbral se fijaron a mano ANTES de ejecutar cualquier experimento y NO se ajustan
+# con datos. Si se cambian, se incrementa la versión y se documenta en el registro de cambios.
+#
+# Coincidencias: los patrones se aplican sobre el texto en minúsculas y sin tildes. Los patrones son
+# expresiones regulares de Python; \b marca límite de palabra.
+#
+# tipo:
+#   presencia  -> la regla se activa si aparece al menos un patrón
+#   ausencia   -> la regla se activa si NO aparece ningún patrón
+#   mayusculas -> proporción de letras mayúsculas del campo >= umbral (y al menos min_letras letras)
+#   puntuacion -> aparece un patrón de puntuación repetida o el conteo de '!' supera el umbral
+#   longitud   -> el campo tiene menos de max_palabras palabras
+#   combinada  -> se activa si aparecen patrones de los dos grupos (requiere_a y requiere_b)
+
+version: "1.0.0"
+fecha: "2026-11-23"
+umbral_sospechosa: 2.0
+registro_cambios:
+  - version: "1.0.0"
+    fecha: "2026-11-23"
+    cambio: "Versión inicial, escrita antes de los experimentos."
+
+reglas:
+  - id: R01
+    nombre: sin_atribucion
+    descripcion: "No cita ninguna fuente identificable (nadie 'dijo', 'informó', 'según...')."
+    fundamento: "IFLA: 'Fuentes de apoyo' - comprobar que la información está respaldada."
+    campo: cuerpo
+    tipo: ausencia
+    peso: 1.0
+    patrones:
+      - '\bsegun\b'
+      - '\bde acuerdo con\b'
+      - '\b(informo|informaron|declaro|declararon|dijo|dijeron|afirmo|afirmaron)\b'
+      - '\b(senalo|senalaron|explico|explicaron|aseguro|aseguraron|indico|indicaron)\b'
+      - '\b(reporto|reportaron|confirmo|confirmaron|detallo|preciso|anuncio|anunciaron)\b'
+      - '\b(comunicado|boletin|agencia|fuentes?)\b'
+
+  - id: R02
+    nombre: titular_en_mayusculas
+    descripcion: "El titular está escrito mayoritariamente en mayúsculas."
+    fundamento: "IFLA: 'Lee más allá' - los titulares escandalosos buscan clics."
+    campo: titular
+    tipo: mayusculas
+    umbral: 0.6
+    min_letras: 10
+    peso: 1.0
+
+  - id: R03
+    nombre: lenguaje_sensacionalista
+    descripcion: "Usa expresiones sensacionalistas o de urgencia."
+    fundamento: "IFLA: 'Lee más allá' y 'Comprueba tus prejuicios' - apelación emocional."
+    campo: todo
+    tipo: presencia
+    peso: 1.0
+    patrones:
+      - '\b(urgente|impactante|increible|insolito|escandalo|escandaloso|alerta)\b'
+      - '\bultima hora\b'
+      - '\bno lo vas a creer\b'
+      - '\blo que no quieren que sepas\b'
+      - '\b(nos ocultan|te ocultan|lo ocultan)\b'
+      - '\b(bomba|exclusiva mundial)\b'
+
+  - id: R04
+    nombre: llamado_a_difundir
+    descripcion: "Pide expresamente compartir o reenviar el mensaje."
+    fundamento: "IFLA edición COVID-19: los mensajes de redes que piden ser reenviados son una señal de alerta."
+    campo: todo
+    tipo: presencia
+    peso: 2.0
+    patrones:
+      - '\b(comparte|compartelo|compartela|compartan|compartir esto)\b'
+      - '\b(difunde|difundan|difundelo|reenvia|reenvien|reenvialo|pasalo|viralicen?)\b'
+      - '\bque todos (lo )?sepan\b'
+      - '\bantes de que lo (borren|eliminen)\b'
+
+  - id: R05
+    nombre: puntuacion_excesiva
+    descripcion: "Signos de exclamación o interrogación repetidos."
+    fundamento: "IFLA: 'Lee más allá' - formato alarmista."
+    campo: todo
+    tipo: puntuacion
+    patrones: ['!!', '\?\?', '¡¡']
+    max_exclamaciones: 3
+    peso: 1.0
+
+  - id: R06
+    nombre: expertos_anonimos
+    descripcion: "Atribuye la afirmación a 'científicos', 'expertos' o 'un estudio' sin identificarlos."
+    fundamento: "IFLA: 'Comprueba el autor' y 'Consulta a expertos'."
+    campo: todo
+    tipo: presencia
+    peso: 1.0
+    patrones:
+      - '\b(cientificos|expertos|investigadores|medicos|doctores|especialistas) (han |habrian )?(dicen|afirman|aseguran|descubrieron|revelan|revelaron|advierten|confirman|demostraron)\b'
+      - '\bun (nuevo )?estudio (revela|revelo|demuestra|demostro|asegura|confirma)\b'
+
+  - id: R07
+    nombre: sin_referencia_temporal
+    descripcion: "No menciona ninguna fecha, día ni referencia temporal."
+    fundamento: "IFLA: 'Comprueba la fecha'."
+    campo: cuerpo
+    tipo: ausencia
+    peso: 0.5
+    patrones:
+      - '\b(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|setiembre|octubre|noviembre|diciembre)\b'
+      - '\b(lunes|martes|miercoles|jueves|viernes|sabado|domingo)\b'
+      - '\b(ayer|hoy|anoche|manana)\b'
+      - '\b(esta|la) semana (pasada)?\b'
+      - '\beste (ano|mes)\b'
+      - '\bel (ano|mes) pasado\b'
+
+  - id: R08
+    nombre: texto_breve
+    descripcion: "El cuerpo es muy breve (menos de 120 palabras): poca sustancia verificable."
+    fundamento: "IFLA: 'Lee más allá' - leer la historia completa."
+    campo: cuerpo
+    tipo: longitud
+    max_palabras: 120
+    peso: 0.5
+
+  - id: R09
+    nombre: afirmacion_milagrosa
+    descripcion: "Promete curas, remedios milagrosos o resultados absolutos."
+    fundamento: "IFLA edición COVID-19: desconfiar de afirmaciones de salud sin respaldo de autoridades."
+    campo: todo
+    tipo: presencia
+    peso: 1.0
+    patrones:
+      - '\b(cura|curar|curan) (el|la|los|las|definitivamente)\b'
+      - '\b(milagro|milagroso|milagrosa|remedio casero)\b'
+      - '\bsin efectos secundarios\b'
+      - '\b(cien por ciento|100 por ciento) (efectivo|seguro|comprobado)\b'
+
+  - id: R10
+    nombre: cita_textual_atribuida
+    descripcion: "Contiene citas textuales atribuidas a una persona o institución (señal protectora)."
+    fundamento: "IFLA: 'Fuentes de apoyo' - la atribución verificable reduce la sospecha."
+    campo: cuerpo
+    tipo: combinada
+    peso: -1.0
+    requiere_a: ['["“”«»]']
+    requiere_b:
+      - '\b(dijo|afirmo|declaro|senalo|explico|aseguro|indico|anadio|sostuvo|subrayo)\b'

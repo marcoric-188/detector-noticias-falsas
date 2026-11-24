@@ -1,0 +1,17 @@
+# Datos: se descargan con `python -m fakenews.data descargar` (no se redistribuyen)
+data/raw/
+data/processed/
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+.venv/
+venv/
+.ipynb_checkpoints/
+# Secretos (el proyecto no usa ninguno; se ignoran por precaución)
+.env
+*.key
+secrets.*
+.streamlit/secrets.toml

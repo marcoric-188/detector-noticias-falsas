@@ -1,0 +1,54 @@
+# Configuración general del proyecto 22 · Detector de noticias falsas
+# Todas las rutas son relativas a la raíz del repositorio.
+
+proyecto:
+  nombre: detector-noticias-falsas
+  version_modelo: "1.0.0"
+
+datos:
+  # Spanish Fake News Corpus (licencia CC-BY-4.0). Se fija el commit para que la descarga sea estable.
+  repositorio: https://github.com/jpposadas/FakeNewsCorpusSpanish
+  commit: 732f4870abd8d3f5ab4956fd92b040a7913614e3
+  url_base: https://raw.githubusercontent.com/jpposadas/FakeNewsCorpusSpanish/732f4870abd8d3f5ab4956fd92b040a7913614e3
+  archivos:
+    entrenamiento:
+      nombre: train.xlsx
+      sha256: b091a8fa842ea4c2c9b9c28fe0ed28d6ed8da797ced282c5a4dcd71af2e3c67a
+      version_corpus: v1 (2018)
+    prueba_dd:
+      nombre: development.xlsx
+      sha256: 5a894152170242cb07248d264157b4d3884d86ef42e5ba22e5a6a638787dce57
+      version_corpus: v1 (2018)
+    prueba_fd:
+      nombre: test.xlsx
+      sha256: 11e38355804f86cfac3aeddcb78208cb175d369831f551f9d8fe49353c582763
+      version_corpus: v2 (2020-2021, FakeDeS)
+  dir_crudos: data/raw
+  dir_procesados: data/processed
+  # Umbral de similitud coseno (TF-IDF) para considerar dos textos casi duplicados.
+  umbral_casi_duplicado: 0.9
+
+validacion:
+  n_pliegues: 5
+  semillas: [13, 42, 2026]
+  pliegues_internos: 3        # validación cruzada anidada para hiperparámetros
+
+decision:
+  umbral: 0.5                 # probabilidad de "falsa" a partir de la cual se marca "sospechosa"
+  abstencion: [0.40, 0.60]    # zona "indeterminada" -> revisión humana
+
+evaluacion:
+  bootstrap_remuestreos: 2000
+  bootstrap_semilla: 42
+  min_casos_subgrupo: 20
+
+entradas_app:
+  min_palabras: 30
+  max_palabras: 5000
+  min_proporcion_palabras_espanol: 0.08
+
+salidas:
+  dir_resultados: results
+  dir_figuras: results/figuras
+  dir_tablas: results/tablas
+  dir_modelos: models

@@ -1,0 +1,128 @@
+# Plan de experimentos (sección 8 del formato). Cada experimento cambia UNA variable respecto al indicado en
+# "compara_con". Todos se evalúan con validación cruzada estratificada y agrupada por fuente, solo con la
+# partición de entrenamiento (ver docs/plan_evaluacion.md).
+#
+# Campos de "modelo":
+#   tipo: dummy | reglas | nb | logreg | svm | hibrido
+#   entrada: titular_cuerpo | titular | cuerpo
+#   tfidf: parámetros de TfidfVectorizer (analyzer, ngram_range, min_df, sublinear_tf, lowercase)
+#   clf: parámetros del clasificador
+#   busqueda: rejilla de hiperparámetros (activa validación cruzada anidada)
+
+E-00a:
+  pregunta: "¿Cuál es el piso de desempeño si siempre se responde la clase mayoritaria?"
+  compara_con: null
+  cambio: "Línea base trivial"
+  modelo: {tipo: dummy, entrada: titular_cuerpo}
+
+E-00b:
+  pregunta: "¿Qué tan lejos llega el sistema experto de reglas, sin aprendizaje?"
+  compara_con: E-00a
+  cambio: "Alternativa no-ML (reglas de configs/reglas.yaml, umbral 2)"
+  modelo: {tipo: reglas, entrada: titular_cuerpo}
+
+E-01:
+  pregunta: "Línea base de ML: ¿qué logra un modelo estándar y simple?"
+  compara_con: E-00b
+  cambio: "TF-IDF de palabras (unigramas) + Naive Bayes multinomial"
+  modelo:
+    tipo: nb
+    entrada: titular_cuerpo
+    tfidf: {analyzer: word, ngram_range: [1, 1], min_df: 2, sublinear_tf: true, lowercase: true}
+    clf: {alpha: 1.0}
+
+E-02:
+  pregunta: "¿Mejora un clasificador discriminativo (regresión logística) con la misma representación?"
+  compara_con: E-01
+  cambio: "Clasificador: Naive Bayes -> regresión logística"
+  modelo:
+    tipo: logreg
+    entrada: titular_cuerpo
+    tfidf: {analyzer: word, ngram_range: [1, 1], min_df: 2, sublinear_tf: true, lowercase: true}
+    clf: {C: 1.0}
+
+E-03:
+  pregunta: "¿Aportan los bigramas de palabras (expresiones como 'de acuerdo')?"
+  compara_con: E-02
+  cambio: "n-gramas de palabras: (1,1) -> (1,2)"
+  modelo:
+    tipo: logreg
+    entrada: titular_cuerpo
+    tfidf: {analyzer: word, ngram_range: [1, 2], min_df: 2, sublinear_tf: true, lowercase: true}
+    clf: {C: 1.0}
+
+E-04:
+  pregunta: "¿Capturan mejor el estilo los n-gramas de caracteres (morfología, puntuación)?"
+  compara_con: E-02
+  cambio: "Representación: palabras (1,1) -> caracteres dentro de palabra (2,5)"
+  modelo:
+    tipo: logreg
+    entrada: titular_cuerpo
+    tfidf: {analyzer: char_wb, ngram_range: [2, 5], min_df: 2, sublinear_tf: true, lowercase: true}
+    clf: {C: 1.0}
+
+E-05:
+  pregunta: "¿Supera una SVM lineal a la regresión logística con la misma representación?"
+  compara_con: E-03
+  cambio: "Clasificador: regresión logística -> SVM lineal (calibrada para obtener probabilidades)"
+  modelo:
+    tipo: svm
+    entrada: titular_cuerpo
+    tfidf: {analyzer: word, ngram_range: [1, 2], min_df: 2, sublinear_tf: true, lowercase: true}
+    clf: {C: 1.0}
+
+E-06a:
+  pregunta: "¿Cuánto mejora E-03 si se ajustan C y min_df sin tocar la prueba (CV anidada)?"
+  compara_con: E-03
+  cambio: "Búsqueda de hiperparámetros (C, min_df) con CV interna de 3 pliegues"
+  modelo:
+    tipo: logreg
+    entrada: titular_cuerpo
+    tfidf: {analyzer: word, ngram_range: [1, 2], min_df: 2, sublinear_tf: true, lowercase: true}
+    clf: {C: 1.0}
+    busqueda:
+      clf__C: [0.1, 0.3, 1.0, 3.0, 10.0, 30.0]
+      tfidf__min_df: [1, 2, 3]
+
+E-06b:
+  pregunta: "¿Cuánto mejora E-04 si se ajustan C y min_df sin tocar la prueba (CV anidada)?"
+  compara_con: E-04
+  cambio: "Búsqueda de hiperparámetros (C, min_df) con CV interna de 3 pliegues"
+  modelo:
+    tipo: logreg
+    entrada: titular_cuerpo
+    tfidf: {analyzer: char_wb, ngram_range: [2, 5], min_df: 2, sublinear_tf: true, lowercase: true}
+    clf: {C: 1.0}
+    busqueda:
+      clf__C: [0.1, 0.3, 1.0, 3.0, 10.0, 30.0]
+      tfidf__min_df: [1, 2, 3]
+
+E-07:
+  pregunta: "¿Basta el titular? (caso de uso: el verificador solo tiene el titular)"
+  compara_con: E-03
+  cambio: "Entrada: titular + cuerpo -> solo titular"
+  modelo:
+    tipo: logreg
+    entrada: titular
+    tfidf: {analyzer: word, ngram_range: [1, 2], min_df: 2, sublinear_tf: true, lowercase: true}
+    clf: {C: 1.0}
+
+E-08:
+  pregunta: "¿Cuánto depende el modelo de las mayúsculas (titulares gritados)?"
+  compara_con: E-03
+  cambio: "lowercase: true -> false (conserva mayúsculas)"
+  modelo:
+    tipo: logreg
+    entrada: titular_cuerpo
+    tfidf: {analyzer: word, ngram_range: [1, 2], min_df: 2, sublinear_tf: true, lowercase: false}
+    clf: {C: 1.0}
+
+E-09:
+  pregunta: "¿Aportan las reglas del sistema experto información que TF-IDF no captura?"
+  compara_con: E-03
+  cambio: "Se añaden las 10 señales de reglas como rasgos adicionales (modelo híbrido)"
+  modelo:
+    tipo: hibrido
+    entrada: titular_cuerpo
+    tfidf: {analyzer: word, ngram_range: [1, 2], min_df: 2, sublinear_tf: true, lowercase: true}
+    clf: {C: 1.0}
