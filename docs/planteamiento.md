@@ -8,9 +8,9 @@
 |---|---|
 | Número y nombre del ejercicio | Ejercicio 22 · Detector de noticias falsas |
 | Categoría / nivel | Categoría 03 · Lenguaje Natural (NLP) · Nivel principiante–intermedio |
-| Estudiante(s) | _[completar nombre(s)]_ |
+| Estudiante(s) | Marco Andrés Rico |
 | Fecha / versión | 23 de noviembre de 2026 · versión del documento 1.0 |
-| Modalidad | _[Individual / equipo de __ personas]_ |
+| Modalidad | Individual |
 | Repositorio y cuaderno | _[enlace al repositorio en GitHub]_ · cuaderno guiado: `notebooks/00_ejecutar_en_colab.ipynb` |
 
 ## 2. Resumen del problema (paso 1 — 153 palabras)

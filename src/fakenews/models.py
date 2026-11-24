@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from typing import Any
 
+import numpy as np
 from sklearn.calibration import CalibratedClassifierCV
 from sklearn.dummy import DummyClassifier
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -34,7 +35,7 @@ def seleccionar_texto(X, modo: str = "titular_cuerpo"):  # noqa: N803
 def _tfidf(params: dict[str, Any]) -> TfidfVectorizer:
     p = dict(params)
     p["ngram_range"] = tuple(p.get("ngram_range", (1, 1)))
-    return TfidfVectorizer(strip_accents=None, max_features=200_000, dtype=float, **p)
+    return TfidfVectorizer(strip_accents=None, max_features=200_000, dtype=np.float64, **p)
 
 
 def familia(spec: dict[str, Any]) -> str:
