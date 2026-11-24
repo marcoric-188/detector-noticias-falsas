@@ -1,0 +1,25 @@
+E-00a  estratificada F1-macro 0.332 ± 0.001  (entren. 0.334)     0.3 s
+E-00a  agrupada      F1-macro 0.313 ± 0.013  (entren. 0.339)     0.4 s
+E-00b  estratificada F1-macro 0.455 ± 0.027  (entren. 0.456)    22.3 s
+E-00b  agrupada      F1-macro 0.464 ± 0.090  (entren. 0.457)    22.0 s
+E-01   estratificada F1-macro 0.804 ± 0.032  (entren. 0.980)     9.2 s
+E-01   agrupada      F1-macro 0.640 ± 0.164  (entren. 0.975)     9.4 s
+E-02   estratificada F1-macro 0.830 ± 0.023  (entren. 0.986)     9.5 s
+E-02   agrupada      F1-macro 0.685 ± 0.110  (entren. 0.986)     9.4 s
+E-03   estratificada F1-macro 0.824 ± 0.034  (entren. 0.994)    16.0 s
+E-03   agrupada      F1-macro 0.698 ± 0.104  (entren. 0.993)    15.8 s
+E-04   estratificada F1-macro 0.828 ± 0.030  (entren. 0.979)    59.5 s
+E-04   agrupada      F1-macro 0.695 ± 0.081  (entren. 0.976)    60.4 s
+E-05   estratificada F1-macro 0.834 ± 0.024  (entren. 1.000)    16.3 s
+E-05   agrupada      F1-macro 0.725 ± 0.066  (entren. 1.000)    16.2 s
+E-06a  estratificada F1-macro 0.839 ± 0.025  (entren. 1.000)   436.5 s
+E-06a  agrupada      F1-macro 0.740 ± 0.071  (entren. 1.000)   418.6 s
+E-06b  estratificada F1-macro 0.841 ± 0.035  (entren. 1.000)  1424.0 s
+E-06b  agrupada      F1-macro 0.730 ± 0.063  (entren. 0.999)  1389.1 s
+E-07   estratificada F1-macro 0.538 ± 0.032  (entren. 0.891)     5.6 s
+E-07   agrupada      F1-macro 0.430 ± 0.083  (entren. 0.886)     5.5 s
+E-08   estratificada F1-macro 0.830 ± 0.030  (entren. 0.995)    15.8 s
+E-08   agrupada      F1-macro 0.697 ± 0.119  (entren. 0.994)    16.2 s
+E-09   estratificada F1-macro 0.714 ± 0.025  (entren. 0.877)    52.4 s
+E-09   agrupada      F1-macro 0.641 ± 0.153  (entren. 0.882)    53.0 s
+Modelo elegido con la regla a priori: E-06a

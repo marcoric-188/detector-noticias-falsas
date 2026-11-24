@@ -1,0 +1,49 @@
+{
+  "elegido": "E-06a",
+  "mejor_por_media": "E-06a",
+  "f1_macro_agrupada_mejor": 0.7396,
+  "de_mejor": 0.071,
+  "candidatos_dentro_de_1_de": [
+    "E-02",
+    "E-03",
+    "E-04",
+    "E-05",
+    "E-06a",
+    "E-06b",
+    "E-08"
+  ],
+  "f1_macro_agrupada_elegido": 0.7396,
+  "modelo": {
+    "tipo": "logreg",
+    "entrada": "titular_cuerpo",
+    "tfidf": {
+      "analyzer": "word",
+      "ngram_range": [
+        1,
+        2
+      ],
+      "min_df": 2,
+      "sublinear_tf": true,
+      "lowercase": true
+    },
+    "clf": {
+      "C": 1.0
+    },
+    "busqueda": {
+      "clf__C": [
+        0.1,
+        0.3,
+        1.0,
+        3.0,
+        10.0,
+        30.0
+      ],
+      "tfidf__min_df": [
+        1,
+        2,
+        3
+      ]
+    }
+  },
+  "regla": "docs/plan_evaluacion.md §5"
+}
