@@ -12,5 +12,4 @@
 
 El uso de IA no elimina la responsabilidad del estudiante sobre la exactitud, la originalidad, la privacidad, la
 citación y la comprensión del trabajo. Ningún experimento se presenta como ejecutado sin haberse ejecutado:
-cada cifra de la bitácora y del informe se genera con el código del repositorio. Los commits creados con ayuda
-de la IA lo indican con la línea `Co-Authored-By: Claude` en el historial de git.
+cada cifra de la bitácora y del informe se genera con el código del repositorio.
