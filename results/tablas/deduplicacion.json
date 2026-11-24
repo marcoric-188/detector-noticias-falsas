@@ -1,0 +1,32 @@
+{
+  "umbral_similitud": 0.9,
+  "prueba_dd": {
+    "antes": 295,
+    "eliminados": 5,
+    "ids_eliminados": [
+      19,
+      65,
+      177,
+      225,
+      267
+    ],
+    "despues": 290
+  },
+  "prueba_fd": {
+    "antes": 572,
+    "eliminados": 4,
+    "ids_eliminados": [
+      187,
+      345,
+      427,
+      433
+    ],
+    "despues": 568
+  },
+  "duplicados_exactos_en_entrenamiento": 0,
+  "sha256": {
+    "entrenamiento": "b091a8fa842ea4c2c9b9c28fe0ed28d6ed8da797ced282c5a4dcd71af2e3c67a",
+    "prueba_dd": "5a894152170242cb07248d264157b4d3884d86ef42e5ba22e5a6a638787dce57",
+    "prueba_fd": "11e38355804f86cfac3aeddcb78208cb175d369831f551f9d8fe49353c582763"
+  }
+}
